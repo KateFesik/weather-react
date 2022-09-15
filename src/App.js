@@ -1,11 +1,14 @@
 import "./App.css";
+import "./styles.css";
 import Footer from "./Footer";
+import CardMainWeather from "./CardMainWeather";
 
 function App() {
   return (
-    <div className="App">
+    <header className="App-header">
+      <CardMainWeather />
       <Footer />
-    </div>
+    </header>
   );
 }
 
