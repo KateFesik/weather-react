@@ -10,23 +10,7 @@ import { BiCurrentLocation } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
 
 export default function CardMainWeather(props) {
-  let apiKey = "6044b52d072e537df7be674146654ba7";
-
-  let [cityName, setCityName] = useState();
-
-  let apiUrlByCity = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${apiKey}`;
-
-  let [cityInfo, setCityInfo] = useState();
-  let [descriptionInfo, setDescriptionInfo] = useState();
-  let [humidity, setHumidity] = useState();
-  let [wind, setWind] = useState();
-  let [icon, setIcon] = useState();
-  let [lastUpdate, setLastUpdate] = useState();
-
-  let [temperature, setTemperature] = useState();
-  let [unints, setUnits] = useState("°C");
-  let [tempMax, setTempMax] = useState();
-  let [tempMin, setTempMin] = useState();
+  let [weatherDate, setWeatherDate] = useState({ ready: false });
 
   function saveWeatherInfo(response) {
     if ((response) => response.text()) {
@@ -34,58 +18,57 @@ export default function CardMainWeather(props) {
         lat: response.data.coord.lat,
         lon: response.data.coord.lon,
       });
-
-      setTemperature(Math.round(response.data.main.temp));
-
-      setTempMax(Math.round(response.data.main.temp_max));
-      setTempMin(Math.round(response.data.main.temp_min));
-
-      setDescriptionInfo(response.data.weather[0].description);
-      setHumidity(response.data.main.humidity);
-      setWind(Math.round(response.data.wind.speed));
-
-      setLastUpdate(formatDate(response.data.dt * 1000));
-
-      setIcon(
-        `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
-      );
-
       let getCountryNames = new Intl.DisplayNames(["en"], { type: "region" });
-      setCityInfo(
-        `${response.data.name}, ${getCountryNames.of(
+      setWeatherDate({
+        ready: true,
+        cityName: response.data.name,
+        units: `°C`,
+        stateCelsius: { opacity: "1" },
+        stateFahrenheit: { opacity: "0.6" },
+        temperature: Math.round(response.data.main.temp),
+        tempMax: Math.round(response.data.main.temp_max),
+        tempMin: Math.round(response.data.main.temp_min),
+        description: response.data.weather[0].description,
+        humidity: response.data.main.humidity,
+        wind: Math.round(response.data.wind.speed),
+        lastUpdate: formatDate(response.data.dt * 1000),
+        cityInfo: `${response.data.name}, ${getCountryNames.of(
           response.data.sys.country
-        )}`
-      );
+        )}`,
+        icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+      });
     }
   }
 
-  let [stateCelsius, setStateCelsius] = useState({
-    opacity: "1",
-  });
-  let [stateFahrenheit, setStateFahrenheit] = useState({
-    opacity: "0.6",
-  });
+  let apiKey = "6044b52d072e537df7be674146654ba7";
+  let apiUrlByCity = `https://api.openweathermap.org/data/2.5/weather?q=${weatherDate.cityName}&units=metric&APPID=${apiKey}`;
 
   function convertToFahrenheit(event) {
     event.preventDefault();
-    if (unints === "°C") {
-      setUnits("°F");
-      setStateFahrenheit({ opacity: "1" });
-      setStateCelsius({ opacity: "0.6" });
-      setTemperature(Math.round((temperature * 9) / 5 + 32));
-      setTempMax(Math.round((tempMax * 9) / 5 + 32));
-      setTempMin(Math.round((tempMin * 9) / 5 + 32));
+    if (weatherDate.units === `°C`) {
+      setWeatherDate((existingValues) => ({
+        ...existingValues,
+        units: `°F`,
+        stateCelsius: { opacity: "0.6" },
+        stateFahrenheit: { opacity: "1" },
+        temperature: Math.round((weatherDate.temperature * 9) / 5 + 32),
+        tempMax: Math.round((weatherDate.tempMax * 9) / 5 + 32),
+        tempMin: Math.round((weatherDate.tempMin * 9) / 5 + 32),
+      }));
     }
   }
   function convertToCelsius(event) {
     event.preventDefault();
-    if (unints === "°F") {
-      setUnits("°C");
-      setStateFahrenheit({ opacity: "0.7" });
-      setStateCelsius({ opacity: "1" });
-      setTemperature(Math.round((5 / 9) * (temperature - 32)));
-      setTempMax(Math.round((5 / 9) * (tempMax - 32)));
-      setTempMin(Math.round((5 / 9) * (tempMin - 32)));
+    if (weatherDate.units === `°F`) {
+      setWeatherDate((existingValues) => ({
+        ...existingValues,
+        units: `°C`,
+        stateCelsius: { opacity: "1" },
+        stateFahrenheit: { opacity: "0.6" },
+        temperature: Math.round((5 / 9) * (weatherDate.temperature - 32)),
+        tempMax: Math.round((5 / 9) * (weatherDate.tempMax - 32)),
+        tempMin: Math.round((5 / 9) * (weatherDate.tempMin - 32)),
+      }));
     }
   }
 
@@ -117,7 +100,10 @@ export default function CardMainWeather(props) {
     axios.get(apiUrlByCity).then(saveWeatherInfo);
   }
   function updateCity(event) {
-    setCityName(event.target.value);
+    setWeatherDate((existingValues) => ({
+      ...existingValues,
+      cityName: event.target.value,
+    }));
   }
 
   function getLocation(event) {
@@ -130,16 +116,16 @@ export default function CardMainWeather(props) {
     });
   }
 
-  if (cityInfo) {
+  if (weatherDate.ready) {
     return (
       <div className="col-10 card card-main-weather mt-5 mb-5">
         <i className="fa-solid fa-location-dot"></i>
         <div className="card-body">
           <div className="row pt-2  justify-content-between">
             <div className="col-lg-6 col-12">
-              <h1 className="city-name">{cityInfo}</h1>
+              <h1 className="city-name">{weatherDate.cityInfo}</h1>
               <h4 className="date-info card-subtitle">
-                Last update: {lastUpdate}
+                Last update: {weatherDate.lastUpdate}
               </h4>
             </div>
 
@@ -175,12 +161,12 @@ export default function CardMainWeather(props) {
           <div className="row mt-4">
             <div className="col justify-content-start">
               <h2 className="row-4 temp-info">
-                {temperature}
+                {weatherDate.temperature}
                 <span className="unit">
                   <a
                     className="celsius"
                     href="/"
-                    style={stateCelsius}
+                    style={weatherDate.stateCelsius}
                     onClick={convertToCelsius}
                   >
                     °C
@@ -189,41 +175,47 @@ export default function CardMainWeather(props) {
                   <a
                     className="fahrenheit"
                     href="/"
-                    style={stateFahrenheit}
+                    style={weatherDate.stateFahrenheit}
                     onClick={convertToFahrenheit}
                   >
                     °F
                   </a>
                 </span>
               </h2>
-              <h3 className="row-4 description">{descriptionInfo}</h3>
+              <h3 className="row-4 description text-capitalize">
+                {weatherDate.description}
+              </h3>
             </div>
 
             <div className="col justify-content-center">
               <div className="row-4 container-icon-weather">
-                <img className="icon-weather" alt="icon weather" src={icon} />
+                <img
+                  className="icon-weather"
+                  alt="icon weather"
+                  src={weatherDate.icon}
+                />
               </div>
             </div>
 
             <div className="col justify-content-end">
               <h4 className="row-4 humidity">
                 <WiHumidity className="mb-1" size={20} color="#f2ebe9" />{" "}
-                {humidity} %
+                {weatherDate.humidity} %
               </h4>
               <h4 className="row-4 wind">
                 <WiStrongWind className="mb-1" size={20} color="#f2ebe9" />{" "}
-                {wind} km/h
+                {weatherDate.wind} km/h
               </h4>
             </div>
           </div>
           <div className="row mt-2">
             <h4 className="row-4 temp-range">
               <WiDirectionUp className="mb-1" size={22} color="#f2ebe9" />
-              {tempMax}
-              {unints}{" "}
+              {weatherDate.tempMax}
+              {weatherDate.units}{" "}
               <WiDirectionDown className="mb-1" size={34} color="#f2ebe9" />
-              {tempMin}
-              {unints}
+              {weatherDate.tempMin}
+              {weatherDate.units}
             </h4>
           </div>
         </div>

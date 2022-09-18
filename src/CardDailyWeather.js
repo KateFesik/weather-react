@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CardDailyWeather.css";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
@@ -6,11 +6,13 @@ import { ThreeDots } from "react-loader-spinner";
 export default function CardDailyWeather(props) {
   let apiKey = "6044b52d072e537df7be674146654ba7";
   let apiForecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${props.coord.lat}&lon=${props.coord.lon}&units=metric&appid=${apiKey}`;
+  let [ready, setReady] = useState(false);
   if (props.coord.lat) {
     axios.get(apiForecastUrl).then(displayForecast);
   }
   function displayForecast(response) {
     if ((response) => response.text()) {
+      setReady(true);
       let forecast = response.data.daily;
       let forecastElement = document.querySelector("#forecast");
 
@@ -54,7 +56,7 @@ export default function CardDailyWeather(props) {
     return days[day];
   }
 
-  if (props.coord.lat) {
+  if (ready) {
     return (
       <div className="col-10 card card-daily-weather mt-5 mb-5">
         <div className="row-6 card-body">
