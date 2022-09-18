@@ -1,0 +1,11 @@
+:root {
+  --background: #243a73;
+  --text-color: #f2ebe9;
+  --color-secondary: #7c3e66;
+  --color-primary: #a5becc;
+  --background-gradient: linear-gradient(to left top, #243a73, #a5becc);
+  --background-gradient-hover: linear-gradient(to left top, #a5becc, #243a73);
+  --default-font-family: "Poppins", sans-serif;
+  --box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  --border-primary: 2px solid #243a73;
+}

@@ -1,0 +1,21 @@
+.card-daily-weather {
+  background: var(--background-gradient);
+  display: block;
+  margin: 0 auto;
+  box-shadow: var(--box-shadow);
+  transition: 0.3s;
+  border-radius: 10px;
+  height: max-content !important;
+}
+.card-daily-weather:hover {
+  background: var(--background-gradient-hover);
+}
+.weather-forecast-date {
+  font-size: 24px;
+}
+.icons-daily {
+  font-size: 36px;
+}
+.weather-forecast-temperatures {
+  font-size: 20px;
+}

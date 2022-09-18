@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./styles.css";
+import "./CardMainWeather.css";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { WiHumidity } from "weather-icons-react";
@@ -150,6 +150,7 @@ export default function CardMainWeather(props) {
                   type="search"
                   placeholder="Please enter a city"
                   onChange={updateCity}
+                  autoFocus="on"
                 />
                 <button
                   className="btn-search-city me-2 ms-2"

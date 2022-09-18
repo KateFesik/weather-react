@@ -1,12 +1,14 @@
 import React from "react";
-import "./styles.css";
+import "./CardDailyWeather.css";
 import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function CardDailyWeather(props) {
   let apiKey = "6044b52d072e537df7be674146654ba7";
   let apiForecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${props.coord.lat}&lon=${props.coord.lon}&units=metric&appid=${apiKey}`;
-  axios.get(apiForecastUrl).then(displayForecast);
-
+  if (props.coord.lat) {
+    axios.get(apiForecastUrl).then(displayForecast);
+  }
   function displayForecast(response) {
     if ((response) => response.text()) {
       let forecast = response.data.daily;
@@ -52,17 +54,41 @@ export default function CardDailyWeather(props) {
     return days[day];
   }
 
-  return (
-    <div className="col-10 card card-daily-weather mt-5 mb-5">
-      <div className="row-6 card-body">
-        <h2 className="col-lg-12 daily-forecast card-title pt-2">
-          DAILY FORECAST
-        </h2>
-        <div
-          className="col-lg-12 daily-weather container mt-5 ms-2"
-          id="forecast"
-        ></div>
+  if (props.coord.lat) {
+    return (
+      <div className="col-10 card card-daily-weather mt-5 mb-5">
+        <div className="row-6 card-body">
+          <h2 className="col-lg-12 daily-forecast card-title pt-2">
+            DAILY FORECAST
+          </h2>
+          <div
+            className="col-lg-12 daily-weather container mt-4 ms-2"
+            id="forecast"
+          ></div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="col-10 card card-daily-weather mt-5 mb-5">
+        <div className="row-6 card-body">
+          <h2 className="col-lg-12 daily-forecast card-title pt-2">
+            DAILY FORECAST
+          </h2>
+          <div className="m-5">
+            <ThreeDots
+              height="100"
+              width="100"
+              radius="9"
+              color="#7c3e66"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }

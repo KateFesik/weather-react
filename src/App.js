@@ -1,6 +1,6 @@
 import "./App.css";
 
-import "./styles.css";
+// import "./styles.css";
 import CardMainWeather from "./CardMainWeather";
 import CardDailyWeather from "./CardDailyWeather";
 import Footer from "./Footer";
@@ -12,7 +12,7 @@ export default function App() {
     lon: "",
   });
   return (
-    <div className="App-header">
+    <div className="App">
       <CardMainWeather saveNewCoord={setCoord} />
       <CardDailyWeather coord={coord} />
       <Footer />

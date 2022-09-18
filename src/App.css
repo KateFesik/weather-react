@@ -1,0 +1,7 @@
+body {
+  background: var(--background) !important;
+  font-family: var(--default-font-family) !important;
+  color: var(--text-color) !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+}
