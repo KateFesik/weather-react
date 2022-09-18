@@ -6,18 +6,16 @@ import CardDailyWeather from "./CardDailyWeather";
 import Footer from "./Footer";
 import { useState } from "react";
 
-function App() {
+export default function App() {
   let [coord, setCoord] = useState({
     lat: "",
     lon: "",
   });
   return (
-    <header className="App-header">
+    <div className="App-header">
       <CardMainWeather saveNewCoord={setCoord} />
       <CardDailyWeather coord={coord} />
       <Footer />
-    </header>
+    </div>
   );
 }
-
-export default App;
