@@ -5,16 +5,23 @@ export default function Footer() {
   return (
     <footer className="mt-4">
       <p className="sign">
-        Coded by Kateryna Ivanova
+        Coded by{" "}
+        <a
+          href="https://clinquant-sunflower-08a338.netlify.app/"
+          target="_blank"
+          rel="noreferrer"
+          title="There is a link portfolio to Kateryna Ivanova"
+        >
+          Kateryna Ivanova
+        </a>
         <br />
         <a
           href="https://github.com/KateFesik/weather-react/tree/main/src"
           target="_blank"
-          className="source-code"
           rel="noreferrer"
-          title="There is a link github this to Kateryna Ivanova project"
+          title="There is a link github this to Weather project"
         >
-          Open-source code
+          open-source code on Github
         </a>
       </p>
     </footer>

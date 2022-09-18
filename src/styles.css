@@ -247,13 +247,6 @@ body {
   font-size: 12px;
   font-weight: lighter;
 }
-.source-code {
-  color: var(--text-color);
-}
-.source-code:hover {
-  color: var(--text-color);
-  font-size: 14px;
-}
 
 .weather-forecast-date {
   font-size: 24px;
@@ -263,4 +256,14 @@ body {
 }
 .weather-forecast-temperatures {
   font-size: 20px;
+}
+.sign a {
+  font-size: 14px;
+  color: var(--text-color);
+  text-decoration: none;
+  opacity: 0.7;
+}
+.sign a:hover {
+  font-size: 16px;
+  opacity: 1;
 }
