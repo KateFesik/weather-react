@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./CardMainWeather.css";
+import FormattedDate from "./FormattedDate";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { WiHumidity } from "weather-icons-react";
@@ -31,7 +32,7 @@ export default function CardMainWeather(props) {
         description: response.data.weather[0].description,
         humidity: response.data.main.humidity,
         wind: Math.round(response.data.wind.speed),
-        lastUpdate: formatDate(response.data.dt * 1000),
+        lastUpdate: new Date(response.data.dt * 1000),
         cityInfo: `${response.data.name}, ${getCountryNames.of(
           response.data.sys.country
         )}`,
@@ -72,29 +73,6 @@ export default function CardMainWeather(props) {
     }
   }
 
-  //add last updated time
-  function formatDate(timestamp) {
-    let date = new Date(timestamp);
-    let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    let day = days[date.getDay()];
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let time;
-    if (minutes < 10) {
-      time = `${hours}:0${minutes}`;
-    } else {
-      time = `${hours}:${minutes}`;
-    }
-    return `${day} ${time}`;
-  }
   function showWeather(event) {
     event.preventDefault();
     axios.get(apiUrlByCity).then(saveWeatherInfo);
@@ -125,7 +103,7 @@ export default function CardMainWeather(props) {
             <div className="col-lg-6 col-12">
               <h1 className="city-name">{weatherDate.cityInfo}</h1>
               <h4 className="date-info card-subtitle">
-                Last update: {weatherDate.lastUpdate}
+                <FormattedDate date={weatherDate.lastUpdate} type={`main`} />
               </h4>
             </div>
 
