@@ -1,6 +1,5 @@
 import "./App.css";
 
-// import "./styles.css";
 import CardMainWeather from "./CardMainWeather";
 import CardDailyWeather from "./CardDailyWeather";
 import Footer from "./Footer";

@@ -20,9 +20,6 @@
 .date-info {
   font-size: 15px;
 }
-.temp-range {
-  font-size: 18px;
-}
 .set-city-form {
   clear: both;
   display: inline-block;
@@ -96,7 +93,7 @@
   width: 160px;
   max-width: 100%;
   height: auto;
-  margin: -70px;
+  margin: -50px;
 }
 .humidity,
 .wind {

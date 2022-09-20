@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import "./CardMainWeather.css";
-import FormattedDate from "./FormattedDate";
+import WeatherInfo from "./WeatherInfo";
+import SearchCity from "./SearchCity";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import { WiHumidity } from "weather-icons-react";
-import { WiStrongWind } from "weather-icons-react";
-import { WiDirectionUp } from "weather-icons-react";
-import { WiDirectionDown } from "weather-icons-react";
-import { BiCurrentLocation } from "react-icons/bi";
-import { BiSearch } from "react-icons/bi";
 
 export default function CardMainWeather(props) {
   let [weatherDate, setWeatherDate] = useState({ ready: false });
@@ -23,12 +18,7 @@ export default function CardMainWeather(props) {
       setWeatherDate({
         ready: true,
         cityName: response.data.name,
-        units: `°C`,
-        stateCelsius: { opacity: "1" },
-        stateFahrenheit: { opacity: "0.6" },
         temperature: Math.round(response.data.main.temp),
-        tempMax: Math.round(response.data.main.temp_max),
-        tempMin: Math.round(response.data.main.temp_min),
         description: response.data.weather[0].description,
         humidity: response.data.main.humidity,
         wind: Math.round(response.data.wind.speed),
@@ -42,39 +32,10 @@ export default function CardMainWeather(props) {
   }
 
   let apiKey = "6044b52d072e537df7be674146654ba7";
-  let apiUrlByCity = `https://api.openweathermap.org/data/2.5/weather?q=${weatherDate.cityName}&units=metric&APPID=${apiKey}`;
-
-  function convertToFahrenheit(event) {
-    event.preventDefault();
-    if (weatherDate.units === `°C`) {
-      setWeatherDate((existingValues) => ({
-        ...existingValues,
-        units: `°F`,
-        stateCelsius: { opacity: "0.6" },
-        stateFahrenheit: { opacity: "1" },
-        temperature: Math.round((weatherDate.temperature * 9) / 5 + 32),
-        tempMax: Math.round((weatherDate.tempMax * 9) / 5 + 32),
-        tempMin: Math.round((weatherDate.tempMin * 9) / 5 + 32),
-      }));
-    }
-  }
-  function convertToCelsius(event) {
-    event.preventDefault();
-    if (weatherDate.units === `°F`) {
-      setWeatherDate((existingValues) => ({
-        ...existingValues,
-        units: `°C`,
-        stateCelsius: { opacity: "1" },
-        stateFahrenheit: { opacity: "0.6" },
-        temperature: Math.round((5 / 9) * (weatherDate.temperature - 32)),
-        tempMax: Math.round((5 / 9) * (weatherDate.tempMax - 32)),
-        tempMin: Math.round((5 / 9) * (weatherDate.tempMin - 32)),
-      }));
-    }
-  }
 
   function showWeather(event) {
     event.preventDefault();
+    let apiUrlByCity = `https://api.openweathermap.org/data/2.5/weather?q=${weatherDate.cityName}&units=metric&APPID=${apiKey}`;
     axios.get(apiUrlByCity).then(saveWeatherInfo);
   }
   function updateCity(event) {
@@ -96,108 +57,12 @@ export default function CardMainWeather(props) {
 
   if (weatherDate.ready) {
     return (
-      <div className="col-10 card card-main-weather mt-5 mb-5">
-        <i className="fa-solid fa-location-dot"></i>
-        <div className="card-body">
-          <div className="row pt-2  justify-content-between">
-            <div className="col-lg-6 col-12">
-              <h1 className="city-name">{weatherDate.cityInfo}</h1>
-              <h4 className="date-info card-subtitle">
-                <FormattedDate date={weatherDate.lastUpdate} type={`main`} />
-              </h4>
-            </div>
-
-            <div className="set-city-form col-lg-6 col-12">
-              <form onSubmit={showWeather}>
-                <input
-                  className="input-city"
-                  type="search"
-                  placeholder="Please enter a city"
-                  onChange={updateCity}
-                  autoFocus="on"
-                />
-                <button
-                  className="btn-search-city me-2 ms-2"
-                  type="button"
-                  onClick={showWeather}
-                  title="Search"
-                >
-                  <BiSearch />
-                </button>
-                <button
-                  className="btn-location me-2"
-                  type="button"
-                  onClick={getLocation}
-                  title="Get location"
-                >
-                  <BiCurrentLocation />
-                </button>
-              </form>
-            </div>
-          </div>
-
-          <div className="row mt-4">
-            <div className="col justify-content-start">
-              <h2 className="row-4 temp-info">
-                {weatherDate.temperature}
-                <span className="unit">
-                  <a
-                    className="celsius"
-                    href="/"
-                    style={weatherDate.stateCelsius}
-                    onClick={convertToCelsius}
-                  >
-                    °C
-                  </a>{" "}
-                  |{" "}
-                  <a
-                    className="fahrenheit"
-                    href="/"
-                    style={weatherDate.stateFahrenheit}
-                    onClick={convertToFahrenheit}
-                  >
-                    °F
-                  </a>
-                </span>
-              </h2>
-              <h3 className="row-4 description text-capitalize">
-                {weatherDate.description}
-              </h3>
-            </div>
-
-            <div className="col justify-content-center">
-              <div className="row-4 container-icon-weather">
-                <img
-                  className="icon-weather"
-                  alt="icon weather"
-                  src={weatherDate.icon}
-                />
-              </div>
-            </div>
-
-            <div className="col justify-content-end">
-              <h4 className="row-4 humidity">
-                <WiHumidity className="mb-1" size={20} color="#f2ebe9" />{" "}
-                {weatherDate.humidity} %
-              </h4>
-              <h4 className="row-4 wind">
-                <WiStrongWind className="mb-1" size={20} color="#f2ebe9" />{" "}
-                {weatherDate.wind} km/h
-              </h4>
-            </div>
-          </div>
-          <div className="row mt-2">
-            <h4 className="row-4 temp-range">
-              <WiDirectionUp className="mb-1" size={22} color="#f2ebe9" />
-              {weatherDate.tempMax}
-              {weatherDate.units}{" "}
-              <WiDirectionDown className="mb-1" size={34} color="#f2ebe9" />
-              {weatherDate.tempMin}
-              {weatherDate.units}
-            </h4>
-          </div>
-        </div>
-      </div>
+      <WeatherInfo
+        date={weatherDate}
+        getLocation={getLocation}
+        showWeather={showWeather}
+        updateCity={updateCity}
+      />
     );
   } else {
     return (
@@ -215,30 +80,11 @@ export default function CardMainWeather(props) {
           />
         </div>
         <div className="set-city-form col-10 m-3">
-          <form onSubmit={showWeather}>
-            <input
-              className="input-city"
-              type="search"
-              placeholder="Please enter a city"
-              onChange={updateCity}
-            />
-            <button
-              className="btn-search-city me-2 ms-2"
-              type="button"
-              onClick={showWeather}
-              title="Search"
-            >
-              <BiSearch />
-            </button>
-            <button
-              className="btn-location me-2"
-              type="button"
-              onClick={getLocation}
-              title="Get location"
-            >
-              <BiCurrentLocation />
-            </button>
-          </form>
+          <SearchCity
+            showWeather={showWeather}
+            updateCity={updateCity}
+            getLocation={getLocation}
+          />
         </div>
       </div>
     );
