@@ -1,13 +1,10 @@
 import React from "react";
 
 export default function FormattedDate(props) {
-  /**
-   @todo: addd formattedDate in CardDailyWeather
-**/
-  let date = new Date(props.date);
-  let days;
-  let formattedDate;
+  let date, days, formattedDate;
+
   if (props.type === "main") {
+    date = new Date(props.date);
     days = [
       "Sunday",
       "Monday",
@@ -26,12 +23,14 @@ export default function FormattedDate(props) {
     } else {
       time = `${hours}:${minutes}`;
     }
-    formattedDate = `${day} ${time}`;
+    formattedDate = `Last update: ${day} ${time}`;
   } else {
-    days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    formattedDate = days[date.getDay()];
-    alert(formattedDate);
+    if (props.type === "daily") {
+      date = new Date(props.date * 1000);
+      days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let day = date.getDay();
+      formattedDate = days[day];
+    }
   }
-
-  return <div>Last update: {formattedDate}</div>;
+  return <div>{formattedDate}</div>;
 }

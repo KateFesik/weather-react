@@ -1,3 +1,18 @@
+@media (max-width: 400px) {
+  .icons-daily {
+    display: none;
+  }
+  .weather-forecast-date {
+    font-size: 16px !important;
+  }
+  .weather-forecast-temperatures {
+    font-size: 14px !important;
+  }
+  .daily-forecast {
+    font-size: 20px !important;
+  }
+}
+
 .card-daily-weather {
   background: var(--background-gradient);
   display: block;
@@ -10,12 +25,21 @@
 .card-daily-weather:hover {
   background: var(--background-gradient-hover);
 }
-.weather-forecast-date {
+
+.daily-forecast {
   font-size: 24px;
 }
+.weather-forecast {
+  border: 1px solid var(--text-color);
+  opacity: 0.9;
+}
+.weather-forecast-date {
+  font-size: 22px;
+}
 .icons-daily {
-  font-size: 36px;
+  font-size: 30px;
 }
 .weather-forecast-temperatures {
   font-size: 20px;
+  display: inline-block;
 }

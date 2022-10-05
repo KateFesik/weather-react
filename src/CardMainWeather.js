@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CardMainWeather.css";
 import WeatherInfo from "./WeatherInfo";
 import SearchCity from "./SearchCity";
@@ -31,7 +31,14 @@ export default function CardMainWeather(props) {
     }
   }
 
-  let apiKey = "6044b52d072e537df7be674146654ba7";
+  let apiKey = "0ebc654fccbc00189d5408f3d6f15b08";
+
+  useEffect(() => {
+    setWeatherDate((existingValues) => ({
+      ...existingValues,
+      ready: false,
+    }));
+  }, [props.coord]);
 
   function showWeather(event) {
     event.preventDefault();

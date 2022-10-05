@@ -1,93 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CardDailyWeather.css";
 import axios from "axios";
+import DailyWeatherInfo from "./DailyWeatherInfo";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function CardDailyWeather(props) {
-  let apiKey = "6044b52d072e537df7be674146654ba7";
+  let apiKey = "0ebc654fccbc00189d5408f3d6f15b08";
   let apiForecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${props.coord.lat}&lon=${props.coord.lon}&units=metric&appid=${apiKey}`;
+
+  let [forecast, setForecast] = useState();
   let [ready, setReady] = useState(false);
-  if (props.coord.lat) {
-    axios.get(apiForecastUrl).then(displayForecast);
-  }
+
+  useEffect(() => {
+    setReady(false);
+  }, [props.coord]);
+
   function displayForecast(response) {
     if ((response) => response.text()) {
+      setForecast(response.data.daily);
       setReady(true);
-      let forecast = response.data.daily;
-      let forecastElement = document.querySelector("#forecast");
-
-      let forecastHTML = `<div class="row">`;
-      forecast.forEach(function (forecastDay, index) {
-        if (index < 6) {
-          forecastHTML =
-            forecastHTML +
-            `
-          <div class="col-lg-2 col-4 mb-4">
-            <div class="weather-forecast-date">${formatForecastDate(
-              forecastDay.dt
-            )}</div>
-            <img
-              class="icons-daily"
-              src="http://openweathermap.org/img/wn/${
-                forecastDay.weather[0].icon
-              }@2x.png"
-              alt=""
-              width="42"
-            />
-            <div class="weather-forecast-temperatures">
-              <span id="forecast_temp">${Math.round(
-                forecastDay.temp.day
-              )}</span>
-              <span id="forecast_degrees">°C</span>
-            </div>
-          </div>
-        `;
-        }
-      });
-      forecastHTML = forecastHTML + `</div>`;
-      forecastElement.innerHTML = forecastHTML;
     }
-  }
-
-  function formatForecastDate(timestamp) {
-    let date = new Date(timestamp * 1000);
-    let day = date.getDay();
-    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return days[day];
   }
 
   if (ready) {
     return (
       <div className="col-10 card card-daily-weather mt-5 mb-5">
-        <div className="row-6 card-body">
+        <div className="card-body">
           <h2 className="col-lg-12 daily-forecast card-title pt-2">
             DAILY FORECAST
           </h2>
-          <div
-            className="col-lg-12 daily-weather container mt-4 ms-2"
-            id="forecast"
-          ></div>
+
+          <div className="col-lg-12 daily-weather container mt-4">
+            <div className="row">
+              {forecast.map(function (dailyForecast, index) {
+                if (index < 6) {
+                  return (
+                    <div className="col-lg-2 col-4" key={index}>
+                      <DailyWeatherInfo forecast={dailyForecast} />
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
+          </div>
         </div>
       </div>
     );
   } else {
+    if (props.coord.lat) {
+      axios.get(apiForecastUrl).then(displayForecast);
+    }
+
     return (
-      <div className="col-10 card card-daily-weather mt-5 mb-5">
-        <div className="row-6 card-body">
-          <h2 className="col-lg-12 daily-forecast card-title pt-2">
-            DAILY FORECAST
-          </h2>
-          <div className="m-5">
-            <ThreeDots
-              height="100"
-              width="100"
-              radius="9"
-              color="#7c3e66"
-              ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
-              wrapperClassName=""
-              visible={true}
-            />
+      <div>
+        <div className="col-10 card card-daily-weather mt-5 mb-5">
+          <div className="row-6 card-body">
+            <h2 className="col-lg-12 daily-forecast card-title pt-2">
+              DAILY FORECAST
+            </h2>
+            <div className="m-5">
+              <ThreeDots
+                height="100"
+                width="100"
+                radius="9"
+                color="#7c3e66"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            </div>
           </div>
         </div>
       </div>
