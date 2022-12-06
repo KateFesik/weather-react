@@ -1,3 +1,9 @@
+# Project desc
+
+The Weather app shows forecast now and daily forecast.
+The project uses data provided by openweathermap.org REST API. This app utilizes Bootstrap, React. 
+The source code is under Git version control system.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
